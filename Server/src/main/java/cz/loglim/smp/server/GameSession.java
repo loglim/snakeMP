@@ -63,9 +63,8 @@ public class GameSession implements Runnable {
             }
         }
 
-        PlayerConnection connection = new PlayerConnection(this, socket);
+        PlayerConnection connection = new PlayerConnection(socket);
         connection.setId(playerConnections.size());
-
         playerConnections.add(connection);
         protocol.setPhase(Protocol.Phase.identification);
         playerCount++;
@@ -191,7 +190,6 @@ public class GameSession implements Runnable {
 
         // Send initial game data to all
         notifyAllClients(game.serializeInitialData());
-
         System.out.println("> [OK] Initial data sent");
     }
 

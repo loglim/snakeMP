@@ -9,7 +9,7 @@ public class Player {
 
     // Private
     private int id;
-    private boolean isDisconnected;
+    private boolean disconnected;
     private int respawnMark;
     private String name;
     private Trail trail;
@@ -19,7 +19,7 @@ public class Player {
 
     public Player(int id) {
         this.id = id;
-        isDisconnected = false;
+        disconnected = false;
     }
 
     public Player(String name, int x, int y, GameData gameData, int id) {
@@ -32,7 +32,7 @@ public class Player {
     }
 
     public void updateDirection() {
-        if (isDisconnected) return;
+        if (disconnected) return;
 
         if (requestedDirection != currentDirection) {
             currentDirection = requestedDirection;
@@ -40,7 +40,7 @@ public class Player {
     }
 
     public void update() {
-        if (isDisconnected) return;
+        if (disconnected) return;
 
         if (respawnMark > 0) {
             respawnMark--;
@@ -90,7 +90,7 @@ public class Player {
     }
 
     public String serialize() {
-        return String.format("%s%d#%s#%s#%d#%d#%s", TAG_PLAYER_DATA, id, name, isDisconnected, currentDirection.getValue(),
+        return String.format("%s%d#%s#%s#%d#%d#%s", TAG_PLAYER_DATA, id, name, disconnected, currentDirection.getValue(),
                 respawnMark, trail.serialize());
     }
 
@@ -124,13 +124,9 @@ public class Player {
     void update(Player playerData) {
         moveTo(playerData.getPosition());
         trail = playerData.getTrail();
-        isDisconnected = playerData.isDisconnected;
+        disconnected = playerData.disconnected;
         respawnMark = playerData.respawnMark;
         currentDirection = playerData.getCurrentDirection();
-    }
-
-    private Grid getGrid() {
-        return gameData.getGrid();
     }
 
     Vector2 nextField(int multiplier) {
@@ -162,11 +158,11 @@ public class Player {
     }
 
     public boolean isDisconnected() {
-        return !isDisconnected;
+        return disconnected;
     }
 
     public void setDisconnected(boolean disconnected) {
-        isDisconnected = disconnected;
+        this.disconnected = disconnected;
     }
 
     private void setPosition(Vector2 newPosition) {

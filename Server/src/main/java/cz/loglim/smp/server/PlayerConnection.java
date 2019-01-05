@@ -9,22 +9,19 @@ import static cz.loglim.smp.dto.Protocol.TAG_GAME_OVER;
 import static cz.loglim.smp.dto.Protocol.TAG_STATE_CHANGE;
 
 class PlayerConnection {
-    // Public
 
     // Private
-    private GameSession gameSession;
     private Socket socket;
     private BufferedReader input;
     private PrintWriter output;
-    private int id;
-
     private String name;
+    private int id;
     private boolean identified;
     private boolean disconnected;
 
-    PlayerConnection(GameSession gameSession, Socket socket) {
-        this.gameSession = gameSession;
+    PlayerConnection(Socket socket) {
         this.socket = socket;
+        disconnected = false;
         System.out.println("> [OK] Accepted connection from " + this.socket.getInetAddress());
 
         // Setup communication channels (i/o)
@@ -32,7 +29,6 @@ class PlayerConnection {
             input = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
             output = new PrintWriter(new OutputStreamWriter(this.socket.getOutputStream(), StandardCharsets.UTF_8),
                     true);
-            disconnected = false;
         } catch (IOException e) {
             System.out.println("> [ERR] Cannot establish user connection!");
         }
@@ -104,7 +100,7 @@ class PlayerConnection {
         if (!socket.isConnected()) {
             disconnected = true;
         }
-        return disconnected;
+        return !disconnected;
     }
 
 }
