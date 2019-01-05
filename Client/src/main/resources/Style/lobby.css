@@ -1,0 +1,41 @@
+#startButton {
+    -fx-background-color: #333;
+    -fx-background-radius: 16em;
+    -fx-text-fill: #090;
+    -fx-effect: dropshadow(gaussian, rgba(128, 128, 128, 1), 28, 0, 0, 0);
+}
+
+#startButton:hover {
+    -fx-background-color: #262;
+    -fx-text-fill: #4c4;
+    -fx-effect: dropshadow(gaussian, rgba(128, 255, 128, 1), 36, 0, 0, 0);
+}
+
+#startButton:pressed {
+    -fx-background-color: #393;
+    -fx-text-fill: #6f6;
+    -fx-effect: dropshadow(gaussian, rgba(200, 255, 200, 1), 42, 0, 0, 0);
+}
+
+#exitButton {
+    -fx-background-color: #000;
+    -fx-background-radius: 16em;
+    -fx-text-fill: #a00;
+    -fx-effect: dropshadow(gaussian, rgba(128, 128, 128, 1), 28, 0, 0, 0);
+}
+
+#exitButton:hover {
+    -fx-background-color: #622;
+    -fx-text-fill: #c44;
+    -fx-effect: dropshadow(gaussian, rgba(255, 128, 128, 1), 36, 0, 0, 0);
+}
+
+#exitButton:pressed {
+    -fx-background-color: #933;
+    -fx-text-fill: #f66;
+    -fx-effect: dropshadow(gaussian, rgba(255, 200, 200, 1), 42, 0, 0, 0);
+}
+
+#bottomPanel {
+     -fx-background-color: linear-gradient(#ccc 0%, #000 5%, #000 100%);
+}

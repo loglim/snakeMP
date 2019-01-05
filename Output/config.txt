@@ -1,0 +1,5 @@
+C:\Program Files\Java\jdk1.8.0_181\bin\java.exe#-jar smp-server-0.1.0-SNAPSHOT.jar#false
+C:\Program Files\Java\jdk1.8.0_181\bin\java.exe#-jar smp-client-0.1.0-SNAPSHOT.jar#true
+C:\Program Files\Java\jdk1.8.0_181\bin\java.exe#-jar smp-client-0.1.0-SNAPSHOT.jar#true
+C:\Program Files\Java\jdk1.8.0_181\bin\java.exe#-jar smp-client-0.1.0-SNAPSHOT.jar#true
+C:\Program Files\Java\jdk1.8.0_181\bin\java.exe#-jar smp-client-0.1.0-SNAPSHOT.jar#true

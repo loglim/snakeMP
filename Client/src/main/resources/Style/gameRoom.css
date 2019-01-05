@@ -1,0 +1,77 @@
+BorderPane
+{
+    -fx-background-color: #000;
+}
+
+.playerLabel {
+    -fx-opacity: 1.0;
+    -fx-padding: 2px;
+    -fx-background-color: #000;
+    -fx-background-radius: 2px;
+}
+
+.playerLabel:disabled {
+    -fx-opacity: 0.6;
+}
+
+.playerLabel:disabled .text {
+    -fx-strikethrough: true;
+}
+
+#returnButton {
+    -fx-background-color: #000;
+    -fx-background-radius: 16em;
+    -fx-text-fill: #330;
+    -fx-effect: dropshadow(gaussian, rgba(128, 128, 128, 1), 12, 0, 0, 0);
+}
+
+#returnButton .text {
+    -fx-color: #000;
+}
+
+#returnButton:hover {
+    -fx-background-color: #662;
+    -fx-text-fill: #aa2;
+    -fx-effect: dropshadow(gaussian, rgba(255, 255, 128, 1), 16, 0, 0, 0);
+}
+
+#returnButton:pressed {
+    -fx-background-color: #993;
+    -fx-text-fill: #660;
+    -fx-effect: dropshadow(gaussian, rgba(255, 255, 200, 1), 20, 0, 0, 0);
+}
+
+#toolbar {
+    -fx-background-color: #333;
+}
+
+#rightPane {
+    -fx-background-color: #333;
+}
+
+#messageLabel {
+    -fx-padding: 8px;
+    -fx-background-color: #333;
+    -fx-background-radius: 8px;
+}
+
+.error {
+    -fx-font: 28px arial;
+    -fx-border-color: #999;
+    -fx-border-radius: 8px;
+    -fx-background-color: #333;
+}
+
+.good {
+    -fx-font: 36px arial;
+    -fx-border-color: #ae0;
+    -fx-border-radius: 8px;
+    -fx-background-color: #000;
+}
+
+.bad {
+    -fx-font: 36px arial;
+    -fx-border-color: #c00;
+    -fx-border-radius: 8px;
+    -fx-background-color: #000;
+}

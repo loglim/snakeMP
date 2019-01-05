@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" version="4">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
+    <output url="file://$MODULE_DIR$/Client/target/classes" />
+    <output-test url="file://$MODULE_DIR$/Client/target/test-classes" />
+    <content url="file://$MODULE_DIR$/Client">
+      <sourceFolder url="file://$MODULE_DIR$/Client/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Client/src/main/resources" type="java-resource" />
+      <excludeFolder url="file://$MODULE_DIR$/Client/target" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="Dto" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.9.7" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.9.7" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.9.7" level="project" />
+  </component>
+</module>

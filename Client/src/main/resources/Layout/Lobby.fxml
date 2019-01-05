@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="480.0" prefWidth="640.0" stylesheets="@../Style/lobby.css" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.loglim.smp.client.controllers.LobbyController">
+    <top>
+        <ToolBar maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER_RIGHT">
+            <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308"
+                   maxWidth="1.7976931348623157E308" prefHeight="30.0" text="Snake MP - Lobby" textAlignment="CENTER">
+                <font>
+                    <Font name="System Bold" size="16.0"/>
+                </font>
+                <effect>
+                    <DropShadow color="#3c3" height="6.0" radius="2.5" width="6.0"/>
+                </effect>
+            </Label>
+            <Pane HBox.hgrow="ALWAYS"/>
+            <Button id="exitButton" alignment="CENTER" cancelButton="true" contentDisplay="CENTER"
+                    mnemonicParsing="false" onAction="#onQuitButton" text="Exit" textAlignment="CENTER"/>
+        </ToolBar>
+    </top>
+    <bottom>
+        <HBox id="bottomPanel" alignment="CENTER_RIGHT" prefHeight="96.0" prefWidth="640.0" BorderPane.alignment="CENTER">
+            <Label fx:id="hintLabel" text="hintLabel">
+                <VBox.margin>
+                    <Insets top="12.0" />
+                </VBox.margin>
+            </Label>
+            <Separator minWidth="32" orientation="VERTICAL" visible="false" />
+            <Button fx:id="startButton" defaultButton="true" disable="true" mnemonicParsing="false" onAction="#onStartButton" prefHeight="36.0" prefWidth="200.0" text="Start">
+                <font>
+                    <Font name="System Bold" size="19.0" />
+                </font>
+            </Button>
+            <padding>
+                <Insets right="16.0" />
+            </padding>
+        </HBox>
+    </bottom>
+   <center>
+       <Pane prefHeight="161.0" prefWidth="640.0" BorderPane.alignment="CENTER">
+           <Label layoutX="14.0" layoutY="14.0" text="Your nickname">
+              <font>
+                  <Font size="16.0"/>
+              </font>
+           </Label>
+           <TextField fx:id="nicknameTextField" layoutX="14.0" layoutY="48.0" prefHeight="37.0" prefWidth="200.0"
+                      text="Player">
+              <font>
+                  <Font name="System Bold" size="16.0"/>
+              </font>
+           </TextField>
+           <Button fx:id="randomizeNameButton" layoutX="214.0" layoutY="48.0" mnemonicParsing="false"
+                   onAction="#setRandomName" prefHeight="37.0" prefWidth="104.0" text="Randomize">
+              <font>
+                  <Font size="16.0"/>
+              </font>
+           </Button>
+       </Pane>
+   </center>
+    <right>
+        <VBox alignment="CENTER">
+            <ImageView>
+                <Image backgroundLoading="true" url="Image/logo.jpg" />
+            </ImageView>
+        </VBox>
+    </right>
+</BorderPane>
