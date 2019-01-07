@@ -3,12 +3,16 @@ package cz.loglim.smp.server;
 import cz.loglim.smp.dto.logic.*;
 import cz.loglim.smp.dto.utils.Serialization;
 import cz.loglim.smp.dto.utils.Vector2;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.stream.Collectors;
 
 import static cz.loglim.smp.dto.Protocol.*;
 
 public class Game extends GameData {
+
+    private static final Logger log = LoggerFactory.getLogger(Game.class);
 
     Game() {
         super();
@@ -22,6 +26,7 @@ public class Game extends GameData {
 
     void update() {
         System.out.println("> Updating game...");
+        log.info("> Updating game...");
         if (state != State.playing) return;
 
         // Update direction of players

@@ -6,6 +6,8 @@ import cz.loglim.smp.dto.logic.GridField;
 import cz.loglim.smp.dto.logic.Player;
 import cz.loglim.smp.dto.Protocol;
 import cz.loglim.smp.dto.utils.Serialization;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.Socket;
 import java.util.ArrayList;
@@ -19,6 +21,7 @@ public class GameSession implements Runnable {
     // Constants
     private static final int DEFAULT_ROOM_WIDTH = 32;
     private static final int DEFAULT_ROOM_HEIGHT = 26;
+    private static final Logger log = LoggerFactory.getLogger(GameSession.class);
 
     // Private
     // - Game info
@@ -52,6 +55,7 @@ public class GameSession implements Runnable {
         thread = new Thread(this);
         thread.start();
         log("> [OK] A new session has started!");
+        log.info("> [OK] A new session has started!");
     }
 
     synchronized void addPlayer(Socket socket) {
@@ -117,16 +121,19 @@ public class GameSession implements Runnable {
                 Thread.sleep(400);
             } catch (InterruptedException e) {
                 e.printStackTrace();
+                log.error("Thread error: {}", e.toString());
             }
         }
 
         System.out.println(String.format("> [OK] [%s] Finished", thread.getName()));
+        log.info(String.format("> [%s] Finished", thread.getName()));
     }
 
     // Phase identification
     private void identifyUser(PlayerConnection connection) {
         // Request connection´s identification
         log(String.format("> Identifying connection %d...", connection.getId()));
+        log.info(String.format("> Identifying connection %d...", connection.getId()));
         connection.post(TAG_IDENTIFICATION_REQUEST, true);
         String name = connection.get();
 
@@ -142,6 +149,7 @@ public class GameSession implements Runnable {
         // Update connection
         connection.setName(name);
         log(String.format("> PlayerInfo identified as \"%s\"", connection.getName()));
+        log.info(String.format("> PlayerInfo identified as \"%s\"", connection.getName()));
         connection.post(">> Welcome " + connection.getName(), true);
 
         // Send game room info
@@ -178,6 +186,8 @@ public class GameSession implements Runnable {
         for (Player player : game.getPlayers()) {
             System.out.println(String.format("> PlayerInfo [%d] %s; x = %d, y = %d", player.getId(), player.getName(),
                     player.getPosition().getX(), player.getPosition().getY()));
+            log.debug(String.format("> PlayerInfo [%d] %s; x = %d, y = %d", player.getId(), player.getName(),
+                    player.getPosition().getX(), player.getPosition().getY()));
         }
 
         // Send current player limit
@@ -191,11 +201,13 @@ public class GameSession implements Runnable {
         // Send initial game data to all
         notifyAllClients(game.serializeInitialData());
         System.out.println("> [OK] Initial data sent");
+        log.info("> [OK] Initial data sent");
     }
 
     // Phase gameData in progress
     private void nextGameStep() {
         System.out.println("> Next step...");
+        log.info("> Next step...");
 
         // Check the number of actively connected players
         playerCount = playerConnections.size();
@@ -272,6 +284,7 @@ public class GameSession implements Runnable {
         }
         protocol.setPhase(Phase.results);
         System.out.println(String.format("> Game complete, player [%s] has won!", winnerName));
+        log.info(String.format("> Game complete, player [%s] has won!", winnerName));
     }
 
     private void receivePlayerDirections() {
@@ -282,6 +295,7 @@ public class GameSession implements Runnable {
             if (input == null) {
                 System.out.println(
                         String.format("> [WRN] PlayerInfo [%s] has disconnected!", playerConnection.getName()));
+                log.warn(String.format("> PlayerInfo [%s] has disconnected!", playerConnection.getName()));
                 playerConnection.markDisconnected();
                 game.removePlayer(playerConnection.getId());
                 return;

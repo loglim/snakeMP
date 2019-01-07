@@ -1,5 +1,8 @@
 package cz.loglim.smp.server;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -11,11 +14,13 @@ public class Main {
 
     // Private
     private static Scanner scanner;
+    private static final Logger log = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) {
 
 
         System.out.println("SnakeMP - Server application");
+        log.info("SnakeMP - Server application");
         printSeparator();
         scanner = new Scanner(System.in);
 
@@ -35,6 +40,7 @@ public class Main {
         try {
             ServerSocket serverSocket = new ServerSocket(2018);
             System.out.println("> [OK] Server is running!");
+            log.info("> [OK] Server is running!");
             printSeparator();
 
             // Wait for connectionList
@@ -43,9 +49,11 @@ public class Main {
             }
         } catch (IOException e) {
             e.printStackTrace();
+            log.error("Problem with opening socket: {}", e.toString());
         }
 
         System.out.println("> [OK] Server stopped!");
+        log.info("> [OK] Server stopped!");
     }
 
     private static int chooseValue(String name, int defaultValue, int min, int max) {
@@ -57,11 +65,13 @@ public class Main {
             while (!scanner.hasNextInt()) {
                 scanner.next();
                 System.out.println("Wrong input!");
+                log.warn("Wrong input!");
             }
             value = scanner.nextInt();
         }
         while (value < min || value > max);
         System.out.println(String.format("New %s set to %d", name, value));
+        log.info(String.format("New %s set to %d", name, value));
         printSeparator();
         return value;
     }

@@ -1,11 +1,15 @@
 package cz.loglim.smp.dto.logic;
 
 import cz.loglim.smp.dto.utils.Vector2;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static cz.loglim.smp.dto.Protocol.PLAYER_SAFE_DISTANCE;
 import static cz.loglim.smp.dto.Protocol.TAG_PLAYER_DATA;
 
 public class Player {
+
+    private static final Logger log = LoggerFactory.getLogger(Player.class);
 
     // Private
     private int id;
@@ -55,6 +59,7 @@ public class Player {
             }
             else {
                 System.out.printf("> Respawning %s in %d...%n", name, respawnMark);
+                log.info("Respawning %s in %d...%n", name, respawnMark);
                 setPosition(getPosition());
             }
         } else {
@@ -80,6 +85,7 @@ public class Player {
         trail.addPoint(position);
 
         System.out.println(String.format("> [%s] Position = %s", name, position));
+        log.info(String.format("[%s] Position = %s", name, position));
     }
 
     private void moveTo(Vector2 newPosition) {
@@ -87,6 +93,7 @@ public class Player {
 
         trail.addPoint(newPosition.getClone());
         System.out.println(String.format("[%s] Position = %s", name, newPosition));
+        log.info(String.format("[%s] Position = %s", name, newPosition));
     }
 
     public String serialize() {

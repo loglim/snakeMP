@@ -15,6 +15,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +42,7 @@ public class GameRoomController {
     private static final KeyCode KEY_RIGHT = KeyCode.RIGHT;
     private static final KeyCode KEY_UP = KeyCode.UP;
     private static final KeyCode KEY_DOWN = KeyCode.DOWN;
+    private static final Logger log = LoggerFactory.getLogger(GameRoomController.class);
 
     // Private
     private static AnimationTimer updateTimer;
@@ -69,6 +72,7 @@ public class GameRoomController {
                         KEY_UP, KEY_DOWN));
 
         System.out.println("> Game room initialization [OK]");
+        log.info("Game room initialization [OK]");
     }
 
     private void setup() {
@@ -97,6 +101,7 @@ public class GameRoomController {
         updateTimer.stop();
         ServerConnection.disconnect();
         System.out.println("> Game stopped [OK]");
+        log.info("Game stopped [OK]");
     }
 
     private void startAnimation() {
@@ -137,17 +142,20 @@ public class GameRoomController {
         GameData.State state = ServerConnection.getGameData().getState();
         if (!ServerConnection.isConnected() || state == GameData.State.disconnected) {
             showErrorMessage("Warning:\nConnection to\nserver lost!");
+            log.warn("Connection to server lost!");
         } else if (state == GameData.State.gameOver) {
             if (ServerConnection.getResultPosition() == 1) {
                 showGameMessage(
                         String.format("Congratulations, %s,\nYou have won!", ServerConnection.getPlayerNickname()),
                         true);
+                log.info("You have won! {}", ServerConnection.getPlayerNickname());
             } else {
                 int pos = ServerConnection.getResultPosition();
                 String posText = pos == 2 ? "2nd" : String.format("%dth", pos);
                 showGameMessage(
                         String.format("Game over!\n%s, you are %s", ServerConnection.getPlayerNickname(), posText),
                         false);
+                log.info("Game over");
             }
         }
         messageLabel.setVisible(true);

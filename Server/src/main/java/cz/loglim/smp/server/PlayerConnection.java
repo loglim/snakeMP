@@ -1,5 +1,8 @@
 package cz.loglim.smp.server;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
@@ -9,6 +12,8 @@ import static cz.loglim.smp.dto.Protocol.TAG_GAME_OVER;
 import static cz.loglim.smp.dto.Protocol.TAG_STATE_CHANGE;
 
 class PlayerConnection {
+
+    private static final Logger log = LoggerFactory.getLogger(PlayerConnection.class);
 
     // Private
     private Socket socket;
@@ -23,6 +28,7 @@ class PlayerConnection {
         this.socket = socket;
         disconnected = false;
         System.out.println("> [OK] Accepted connection from " + this.socket.getInetAddress());
+        log.info("[OK] Accepted connection from " + this.socket.getInetAddress());
 
         // Setup communication channels (i/o)
         try {
@@ -31,6 +37,7 @@ class PlayerConnection {
                     true);
         } catch (IOException e) {
             System.out.println("> [ERR] Cannot establish user connection!");
+            log.error("Cannot establish user connection: {}", e.toString());
         }
     }
 
