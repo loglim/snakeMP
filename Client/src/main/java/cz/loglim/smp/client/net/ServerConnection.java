@@ -9,8 +9,6 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.*;
@@ -20,9 +18,6 @@ import java.util.Objects;
 import static cz.loglim.smp.dto.Protocol.*;
 
 public class ServerConnection implements Runnable {
-
-    // Constants
-    private static final Logger log = LoggerFactory.getLogger(ServerConnection.class);
 
     // Public
     public static IntegerProperty playersInQueue;
@@ -63,10 +58,8 @@ public class ServerConnection implements Runnable {
         } catch (IOException e) {
             if (e.getMessage().equals("Connection refused: connect")) {
                 System.out.println("> Cannot connect to server!");
-                log.error("Cannot connect to server!");
             } else {
                 e.printStackTrace();
-                log.error(e.toString());
             }
         }
 
@@ -74,7 +67,6 @@ public class ServerConnection implements Runnable {
         gameStarted = new SimpleBooleanProperty();
 
         System.out.println("> Running protocol thread now...");
-        log.info("Running protocol thread now");
         thread = new Thread(this);
         thread.start();
     }
@@ -87,7 +79,6 @@ public class ServerConnection implements Runnable {
 
     private void stop() {
         System.out.println("> Server connection thread stopping...");
-        log.info("Server connection thread stopping");
         isConnected = false;
 
         try {
@@ -130,7 +121,6 @@ public class ServerConnection implements Runnable {
                         if (!isConnected) {
                             gameData.setState(GameData.State.disconnected);
                             System.out.println("> Disconnected from server!");
-                            log.info("Disconnected from server!");
                             return;
                         }
                         sendCurrentDirection(targetDirection);
@@ -148,7 +138,6 @@ public class ServerConnection implements Runnable {
             } else {
                 //thread.interrupt();
                 System.out.println("> Protocol is NOT SET [ERR]");
-                log.error("Protocol is NOT SET");
                 return;
             }
 
@@ -162,7 +151,6 @@ public class ServerConnection implements Runnable {
         // Dispose old instance reference
         instance = null;
         System.out.println("> Server connection thread finished [OK]");
-        log.info("Server connection thread finished");
     }
 
     public static void receiveInitialData() {
@@ -178,13 +166,11 @@ public class ServerConnection implements Runnable {
 
         protocol.setPhase(Phase.gameInProgress);
         System.out.println("> Initial data received [OK]");
-        log.info("Initial data received");
     }
 
     private void receiveNextStepGameData() {
         // Get food list
         System.out.println("> Receiving next step...");
-        log.info("Receiving next step");
         String[] receivedData = new String[gameData.getPlayerLimit() + 1];
         for (int i = 0; i < receivedData.length; i++) {
             receivedData[i] = get();
@@ -198,7 +184,6 @@ public class ServerConnection implements Runnable {
                 protocol.setPhase(Phase.results);
                 playersInQueue.setValue(-1);
                 System.out.println("> Connection to server lost!");
-                log.warn("Connection to server lost!");
 
                 return;
             }
@@ -227,7 +212,6 @@ public class ServerConnection implements Runnable {
         for (int i = 0; i < gameData.getPlayerLimit(); i++) {
             String data = receivedData[i + 1];
             System.out.println(String.format("> Received player data: [%s]", data));
-            log.info(String.format("> Received player data: [%s]", data));
             Player playerData = Player.deserialize(data, gameData.getGrid());
             if (playerData == null) return;
 
@@ -243,7 +227,6 @@ public class ServerConnection implements Runnable {
 
     private void identifySelf() {
         System.out.println("> Identifying self...");
-        log.info("Identifying self");
 
         String request = get();
         if (request != null && request.equals(TAG_IDENTIFICATION_REQUEST)) {
@@ -252,11 +235,9 @@ public class ServerConnection implements Runnable {
             roomName = get();
             playerLimit = Integer.parseInt(Objects.requireNonNull(get()));
             System.out.println("> Identification request [OK]");
-            log.info("Identification request");
             return;
         }
         System.out.println("> Identification request [ERR]");
-        log.error("Identification request");
     }
 
     private void waitInQueue() {
@@ -264,7 +245,6 @@ public class ServerConnection implements Runnable {
 
         if (message == null) {
             System.out.println("> Waiting in queue...");
-            log.info("Waiting in queue");
             return;
         }
 
@@ -277,7 +257,6 @@ public class ServerConnection implements Runnable {
         }
 
         System.out.println("> Queue >> " + message);
-        log.info("Queue >> " + message);
     }
 
     public static void setTargetDirection(Direction direction) {
@@ -315,10 +294,8 @@ public class ServerConnection implements Runnable {
             protocol.setPhase(Phase.results);
             playersInQueue.setValue(-1);
             System.out.println("> Connection to server lost!");
-            log.info("Connection to server lost!");
         } else {
             e.printStackTrace();
-            log.error("Disconnected {}", e.toString());
         }
     }
 

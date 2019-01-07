@@ -8,16 +8,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.io.IOException;
 import java.util.Objects;
 
 public class Main extends Application {
-
-    private static final Logger log = LoggerFactory.getLogger(Main.class);
 
     // Private
     private static Main instance;
@@ -40,7 +36,6 @@ public class Main extends Application {
         });
 
         primaryStage.show();
-        log.info("Application started");
 
         // Close splash screen
         final SplashScreen splash = SplashScreen.getSplashScreen();
@@ -60,7 +55,6 @@ public class Main extends Application {
             root = loader.load();
         } catch (IOException e) {
             System.out.println("Can't load scene " + layoutUri);
-            log.error("Can't load scene " + layoutUri);
             e.printStackTrace();
         }
 

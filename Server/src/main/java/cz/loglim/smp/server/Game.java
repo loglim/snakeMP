@@ -4,7 +4,6 @@ import cz.loglim.smp.dto.logic.*;
 import cz.loglim.smp.dto.utils.Serialization;
 import cz.loglim.smp.dto.utils.Vector2;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.stream.Collectors;
 
@@ -12,7 +11,8 @@ import static cz.loglim.smp.dto.Protocol.*;
 
 public class Game extends GameData {
 
-    private static final Logger log = LoggerFactory.getLogger(Game.class);
+    // Private
+    private Logger log;
 
     Game() {
         super();
@@ -24,8 +24,11 @@ public class Game extends GameData {
         }
     }
 
+    void setLog(Logger log) {
+        this.log = log;
+    }
+
     void update() {
-        System.out.println("> Updating game...");
         log.info("> Updating game...");
         if (state != State.playing) return;
 
@@ -45,6 +48,7 @@ public class Game extends GameData {
     void createPlayer(String playerName) {
         Vector2 pos = grid.getRandomPositionUnobstructed(PLAYER_SAFE_DISTANCE);
         Player player = new Player(playerName, pos.getX(), pos.getY(), this, players.size());
+        player.setLog(log);
         players.add(player);
     }
 

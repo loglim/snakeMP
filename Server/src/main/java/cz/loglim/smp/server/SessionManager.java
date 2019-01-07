@@ -9,9 +9,11 @@ import java.util.List;
 class SessionManager {
 
     // Private
+    private static Logger log;
     private static List<GameSession> gameSessionList;
 
-    private SessionManager() {
+    static void setLog(Logger log) {
+        SessionManager.log = log;
     }
 
     static GameSession getAvailableSession() {
@@ -28,6 +30,7 @@ class SessionManager {
 
         // Otherwise create a new session and return its instance
         GameSession s = new GameSession(gameSessionList.size() + 1);
+        log.info(String.format("Created new game session (%d)", gameSessionList.size()));
         gameSessionList.add(s);
         return s;
     }

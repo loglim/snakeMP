@@ -2,19 +2,17 @@ package cz.loglim.smp.dto.logic;
 
 import cz.loglim.smp.dto.utils.Vector2;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static cz.loglim.smp.dto.Protocol.PLAYER_SAFE_DISTANCE;
 import static cz.loglim.smp.dto.Protocol.TAG_PLAYER_DATA;
 
 public class Player {
 
-    private static final Logger log = LoggerFactory.getLogger(Player.class);
-
     // Private
+    private Logger log;
     private int id;
-    private boolean disconnected;
     private int respawnMark;
+    private boolean disconnected;
     private String name;
     private Trail trail;
     private Direction requestedDirection;
@@ -33,6 +31,10 @@ public class Player {
         trail = new Trail(gameData.getInitialSize(), gameData.getGrid());
         trail.addPoint(new Vector2(x, y));
         requestedDirection = currentDirection = Direction.right;
+    }
+
+    public void setLog(Logger log) {
+        this.log = log;
     }
 
     public void updateDirection() {
@@ -58,8 +60,9 @@ public class Player {
                 setPosition(pos);
             }
             else {
-                System.out.printf("> Respawning %s in %d...%n", name, respawnMark);
-                log.info("Respawning %s in %d...%n", name, respawnMark);
+                if(log != null) {
+                    log.info("Respawning %s in %d...%n", name, respawnMark);
+                }
                 setPosition(getPosition());
             }
         } else {
@@ -84,16 +87,18 @@ public class Player {
         position = gameData.getGrid().overflowPosition(position);
         trail.addPoint(position);
 
-        System.out.println(String.format("> [%s] Position = %s", name, position));
-        log.info(String.format("[%s] Position = %s", name, position));
+        if (log != null) {
+            log.info(String.format("[%s] Position = %s", name, position));
+        }
     }
 
     private void moveTo(Vector2 newPosition) {
         if (newPosition.equals(getPosition())) return;
 
         trail.addPoint(newPosition.getClone());
-        System.out.println(String.format("[%s] Position = %s", name, newPosition));
-        log.info(String.format("[%s] Position = %s", name, newPosition));
+        if(log != null) {
+            log.info(String.format("[%s] Position = %s", name, newPosition));
+        }
     }
 
     public String serialize() {

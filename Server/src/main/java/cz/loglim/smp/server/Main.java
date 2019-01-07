@@ -17,9 +17,6 @@ public class Main {
     private static final Logger log = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) {
-
-
-        System.out.println("SnakeMP - Server application");
         log.info("SnakeMP - Server application");
         printSeparator();
         scanner = new Scanner(System.in);
@@ -37,9 +34,11 @@ public class Main {
             GameSession.setShowGridInConsole();
         }
 
+        // Set session manager log
+        SessionManager.setLog(log);
+
         try {
             ServerSocket serverSocket = new ServerSocket(2018);
-            System.out.println("> [OK] Server is running!");
             log.info("> [OK] Server is running!");
             printSeparator();
 
@@ -52,7 +51,6 @@ public class Main {
             log.error("Problem with opening socket: {}", e.toString());
         }
 
-        System.out.println("> [OK] Server stopped!");
         log.info("> [OK] Server stopped!");
     }
 
@@ -70,7 +68,6 @@ public class Main {
             value = scanner.nextInt();
         }
         while (value < min || value > max);
-        System.out.println(String.format("New %s set to %d", name, value));
         log.info(String.format("New %s set to %d", name, value));
         printSeparator();
         return value;

@@ -2,6 +2,7 @@ package cz.loglim.smp.dto.logic;
 
 import cz.loglim.smp.dto.utils.Serialization;
 import cz.loglim.smp.dto.utils.Vector2;
+import org.slf4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;

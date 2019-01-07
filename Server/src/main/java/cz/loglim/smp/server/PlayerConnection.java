@@ -27,7 +27,6 @@ class PlayerConnection {
     PlayerConnection(Socket socket) {
         this.socket = socket;
         disconnected = false;
-        System.out.println("> [OK] Accepted connection from " + this.socket.getInetAddress());
         log.info("[OK] Accepted connection from " + this.socket.getInetAddress());
 
         // Setup communication channels (i/o)
@@ -36,7 +35,6 @@ class PlayerConnection {
             output = new PrintWriter(new OutputStreamWriter(this.socket.getOutputStream(), StandardCharsets.UTF_8),
                     true);
         } catch (IOException e) {
-            System.out.println("> [ERR] Cannot establish user connection!");
             log.error("Cannot establish user connection: {}", e.toString());
         }
     }
@@ -90,7 +88,7 @@ class PlayerConnection {
         if (disconnected) return;
 
         if (showOutput) {
-            System.out.println(String.format("> pID-%d: %s", id, message));
+            log.debug(String.format("> pID-%d: %s", id, message));
         }
         output.println(message);
     }

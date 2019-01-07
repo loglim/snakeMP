@@ -21,10 +21,9 @@ public class GameSession implements Runnable {
     // Constants
     private static final int DEFAULT_ROOM_WIDTH = 32;
     private static final int DEFAULT_ROOM_HEIGHT = 26;
-    private static final Logger log = LoggerFactory.getLogger(GameSession.class);
 
     // Private
-    // - Game info
+    private static Logger log;
     private Thread thread;
     private Game game;
     private List<PlayerConnection> playerConnections;
@@ -39,6 +38,8 @@ public class GameSession implements Runnable {
     private int lastPlayerCount;
 
     GameSession(int roomId) {
+        log = LoggerFactory.getLogger("gameSession" + roomId);
+
         // Setup protocol and lists
         protocol = new Protocol(Protocol.Phase.queue);
         playerConnections = new ArrayList<>();
@@ -46,6 +47,7 @@ public class GameSession implements Runnable {
 
         // Create new gameData instance
         game = new Game();
+        game.setLog(log);
         game.setGridSize(DEFAULT_ROOM_WIDTH, DEFAULT_ROOM_HEIGHT);
         game.setPlayerLimit(playerLimit);
         game.setInitialSize(initialSize);
@@ -54,7 +56,6 @@ public class GameSession implements Runnable {
         // Create and start a new thread for this session
         thread = new Thread(this);
         thread.start();
-        log("> [OK] A new session has started!");
         log.info("> [OK] A new session has started!");
     }
 
@@ -67,12 +68,13 @@ public class GameSession implements Runnable {
             }
         }
 
+        // Create new player connection and add it to connections
         PlayerConnection connection = new PlayerConnection(socket);
         connection.setId(playerConnections.size());
         playerConnections.add(connection);
         protocol.setPhase(Protocol.Phase.identification);
         playerCount++;
-        log(String.format("> [OK] PlayerInfo %d connected", connection.getId()));
+        log.info(String.format("> [OK] PlayerInfo %d connected", connection.getId()));
     }
 
     boolean isFull() {
@@ -125,14 +127,12 @@ public class GameSession implements Runnable {
             }
         }
 
-        System.out.println(String.format("> [OK] [%s] Finished", thread.getName()));
         log.info(String.format("> [%s] Finished", thread.getName()));
     }
 
     // Phase identification
     private void identifyUser(PlayerConnection connection) {
         // Request connection´s identification
-        log(String.format("> Identifying connection %d...", connection.getId()));
         log.info(String.format("> Identifying connection %d...", connection.getId()));
         connection.post(TAG_IDENTIFICATION_REQUEST, true);
         String name = connection.get();
@@ -148,7 +148,6 @@ public class GameSession implements Runnable {
 
         // Update connection
         connection.setName(name);
-        log(String.format("> PlayerInfo identified as \"%s\"", connection.getName()));
         log.info(String.format("> PlayerInfo identified as \"%s\"", connection.getName()));
         connection.post(">> Welcome " + connection.getName(), true);
 
@@ -165,7 +164,7 @@ public class GameSession implements Runnable {
         if (lastPlayerCount != playerConnections.size()) {
             lastPlayerCount = playerConnections.size();
             notifyAllClients(String.format("%s%d", TAG_QUEUE_SIZE, lastPlayerCount));
-            System.out.println("Queue size is " + lastPlayerCount);
+            log.info("Queue size is " + lastPlayerCount);
         }
 
         if (lastPlayerCount == game.getPlayerLimit()) {
@@ -184,8 +183,6 @@ public class GameSession implements Runnable {
 
         // DEBUG ONLY - show gameData room info
         for (Player player : game.getPlayers()) {
-            System.out.println(String.format("> PlayerInfo [%d] %s; x = %d, y = %d", player.getId(), player.getName(),
-                    player.getPosition().getX(), player.getPosition().getY()));
             log.debug(String.format("> PlayerInfo [%d] %s; x = %d, y = %d", player.getId(), player.getName(),
                     player.getPosition().getX(), player.getPosition().getY()));
         }
@@ -200,13 +197,11 @@ public class GameSession implements Runnable {
 
         // Send initial game data to all
         notifyAllClients(game.serializeInitialData());
-        System.out.println("> [OK] Initial data sent");
         log.info("> [OK] Initial data sent");
     }
 
     // Phase gameData in progress
     private void nextGameStep() {
-        System.out.println("> Next step...");
         log.info("> Next step...");
 
         // Check the number of actively connected players
@@ -234,22 +229,7 @@ public class GameSession implements Runnable {
 
         // Print grid to console
         if (showGridInConsole) {
-            Grid g = game.getGrid();
-            for (int y = 0; y < g.getH(); y++) {
-                for (int x = 0; x < g.getW(); x++) {
-                    GridField f = g.getField(x, y);
-                    if (f.compare(GridField.Type.player)) {
-                        System.out.print("O");
-                    } else if (f.compare(GridField.Type.obstacle)) {
-                        System.out.print("X");
-                    } else if (f.compare(GridField.Type.food)) {
-                        System.out.print("#");
-                    } else {
-                        System.out.print(" ");
-                    }
-                }
-                System.out.println();
-            }
+            printGrid();
         }
 
         // Send current gameData data
@@ -258,6 +238,25 @@ public class GameSession implements Runnable {
         // Finish gameData session, send results
         if (checkVictoryCondition()) {
             finishGame();
+        }
+    }
+
+    private void printGrid() {
+        Grid g = game.getGrid();
+        for (int y = 0; y < g.getH(); y++) {
+            for (int x = 0; x < g.getW(); x++) {
+                GridField f = g.getField(x, y);
+                if (f.compare(GridField.Type.player)) {
+                    System.out.print("O");
+                } else if (f.compare(GridField.Type.obstacle)) {
+                    System.out.print("X");
+                } else if (f.compare(GridField.Type.food)) {
+                    System.out.print("#");
+                } else {
+                    System.out.print(" ");
+                }
+            }
+            System.out.println();
         }
     }
 
@@ -283,7 +282,6 @@ public class GameSession implements Runnable {
             connection.sendResults(game, scoreList);
         }
         protocol.setPhase(Phase.results);
-        System.out.println(String.format("> Game complete, player [%s] has won!", winnerName));
         log.info(String.format("> Game complete, player [%s] has won!", winnerName));
     }
 
@@ -293,8 +291,6 @@ public class GameSession implements Runnable {
 
             String input = playerConnection.get();
             if (input == null) {
-                System.out.println(
-                        String.format("> [WRN] PlayerInfo [%s] has disconnected!", playerConnection.getName()));
                 log.warn(String.format("> PlayerInfo [%s] has disconnected!", playerConnection.getName()));
                 playerConnection.markDisconnected();
                 game.removePlayer(playerConnection.getId());
@@ -351,6 +347,7 @@ public class GameSession implements Runnable {
      */
     private void notifyAllClients(PlayerConnection playerConnection, String message) {
         for (PlayerConnection connection : playerConnections) {
+            // Skip message source player
             if (connection.equals(playerConnection)) continue;
 
             connection.post(message, false);
@@ -359,10 +356,6 @@ public class GameSession implements Runnable {
 
     static void setShowGridInConsole() {
         GameSession.showGridInConsole = true;
-    }
-
-    private void log(String message) {
-        System.out.println(String.format("> [%s] > %s", roomName, message));
     }
 
     static void setPlayerLimit(int playerLimit) {
